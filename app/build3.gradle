@@ -1,0 +1,17 @@
+// In your D:\Android_Projects\TestService_PHP\app\build.gradle file
+
+android {
+    namespace 'com.example.testservice_php' // Add this line
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.example.testservice_php"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    // ... other configurations
+}

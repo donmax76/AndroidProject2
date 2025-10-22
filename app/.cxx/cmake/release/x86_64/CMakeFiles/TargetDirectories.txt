@@ -1,0 +1,3 @@
+D:/Android_Projects/TestService_PHP/app/.cxx/cmake/release/x86_64/CMakeFiles/native-lib.dir
+D:/Android_Projects/TestService_PHP/app/.cxx/cmake/release/x86_64/CMakeFiles/edit_cache.dir
+D:/Android_Projects/TestService_PHP/app/.cxx/cmake/release/x86_64/CMakeFiles/rebuild_cache.dir

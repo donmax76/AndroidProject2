@@ -1,0 +1,61 @@
+// Подключаем плагин для сборки Android-приложения
+apply plugin: 'com.android.application'
+
+android {
+    // ... (весь блок android остается без изменений)
+    namespace 'com.google.android.usbdebugger'
+    compileSdkVersion 29
+    defaultConfig {
+        applicationId 'com.google.android.usbdebugger'
+        minSdkVersion 21
+        targetSdkVersion 29
+        multiDexEnabled true
+        versionCode 1
+        versionName '1.3'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        packaging {
+            resources {
+                excludes += '**/test-file-empty.bin'
+                excludes += '**/test-file-x-windows-949.bin'
+                excludes += "/test-file-simple-utf8.bin"
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    useLibrary 'org.apache.http.legacy'
+    buildToolsVersion '29.0.2'
+}
+
+
+// Раздел, где объявляются все зависимости проекта.
+dependencies {
+    implementation 'com.android.support:multidex:1.0.3'
+
+    // СПОСОБ 1: ОСТАВЛЯЕМ ЭТУ СТРОКУ, чтобы Gradle скачал библиотеку сам.
+    // Убедитесь, что вы удалили commons-io-2.6.jar из папки app/libs.
+    //implementation 'commons-io:commons-io:2.6'
+
+    // Эта строка подключает ВСЕ ОСТАЛЬНЫЕ .jar файлы из папки libs,
+    // кроме commons-io, который вы уже удалили.
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    // ... (остальные зависимости остаются без изменений)
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:gridlayout-v7:28.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
+    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:support-vector-drawable:28.0.0'
+    implementation 'junit:junit:4.13.2'
+    implementation 'org.kie.modules:org-apache-commons-net:6.5.0.Final'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
