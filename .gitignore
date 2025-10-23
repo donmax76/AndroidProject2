@@ -1,24 +1,23 @@
-# Скопируй это в .gitignore
-# Android Studio
-# Gradle wrapper dists (long paths issue)
-wrapper/dists/
-.idea/
-*.iml
-.gradle/
-local.properties
-/.idea/workspace.xml
-/.idea/tasks.xml
-/.idea/gradle.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
+# Built application files
+*.apk
+*.ap_
+*.dex
 
-# Gradle
-.gradle
+# Gradle files
+.gradle/
 build/
 app/build/
 
-# Keystores (sensitive)
+# Local configuration file
+local.properties
+
+# IntelliJ/Android Studio
+.idea/
+*.iml
+caches/
+
+# Keystore files
 *.jks
 
-# Caches
-caches/
+# Gradle wrapper dists
+gradle/wrapper/dists/
