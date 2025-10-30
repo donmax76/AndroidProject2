@@ -1,23 +1,10 @@
-# Built application files
-*.apk
-*.ap_
-*.dex
-
-# Gradle files
-.gradle/
-build/
 app/build/
-
-# Local configuration file
-local.properties
-
-# IntelliJ/Android Studio
-.idea/
-*.iml
+app/.cxx/
+app/.externalNativeBuild/
+daemon/
+native/
+app/release/
+*.apk
+*.aab
+.gradle/
 caches/
-
-# Keystore files
-*.jks
-
-# Gradle wrapper dists
-gradle/wrapper/dists/
