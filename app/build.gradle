@@ -1,61 +1,68 @@
-// Подключаем плагин для сборки Android-приложения
 apply plugin: 'com.android.application'
 
 android {
-    // ... (весь блок android остается без изменений)
     namespace 'com.google.android.usbdebugger'
-    compileSdkVersion 29
+    compileSdk 34
+
     defaultConfig {
-        applicationId 'com.google.android.usbdebugger'
-        minSdkVersion 21
-        targetSdkVersion 29
-        multiDexEnabled true
+        applicationId "com.google.android.usbdebugger"
+        minSdk 21
+        targetSdk 34
         versionCode 1
-        versionName '1.3'
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        packaging {
-            resources {
-                excludes += '**/test-file-empty.bin'
-                excludes += '**/test-file-x-windows-949.bin'
-                excludes += "/test-file-simple-utf8.bin"
-            }
-        }
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true // <-- ВАЖНО: Разрешаем использование MultiDex
     }
+
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    useLibrary 'org.apache.http.legacy'
-    buildToolsVersion '29.0.2'
+
+    // Фикс дубликатов META-INF (LICENSE.md, NOTICE.md и другие)
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/LICENSE.md', 'META-INF/LICENSE.txt', 'META-INF/LICENSE', 'META-INF/NOTICE.md', 'META-INF/NOTICE.txt', 'META-INF/DEPENDENCIES', 'META-INF/notice.txt']
+            pickFirst '**/libc++_shared.so'  // Для NDK, если нужно
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
-
-// Раздел, где объявляются все зависимости проекта.
 dependencies {
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.11.0'
 
-    // СПОСОБ 1: ОСТАВЛЯЕМ ЭТУ СТРОКУ, чтобы Gradle скачал библиотеку сам.
-    // Убедитесь, что вы удалили commons-io-2.6.jar из папки app/libs.
-    //implementation 'commons-io:commons-io:2.6'
+    // ИСПРАВЛЕНО: Правильная зависимость для ConstraintLayout
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    // Эта строка подключает ВСЕ ОСТАЛЬНЫЕ .jar файлы из папки libs,
-    // кроме commons-io, который вы уже удалили.
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    // ВАЖНО: Добавьте эти строки для полной совместимости
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.activity:activity:1.9.0'
 
-    // ... (остальные зависимости остаются без изменений)
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:gridlayout-v7:28.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:2.0.4'
-    implementation 'com.android.support:support-annotations:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support:support-vector-drawable:28.0.0'
-    implementation 'junit:junit:4.13.2'
-    implementation 'org.kie.modules:org-apache-commons-net:6.5.0.Final'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // Фикс LayoutRes
+    implementation 'androidx.annotation:annotation:1.8.2'
+
+    // Зависимость для MultiDex, используемая в Hello.java
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    // Обновлённые libs
+    implementation 'commons-io:commons-io:2.16.1'
+    implementation 'com.sun.mail:android-mail:1.6.7'
+
+    // HTTP/FTP
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'commons-net:commons-net:3.9.0'  // Стабильная версия
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
-

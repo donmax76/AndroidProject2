@@ -1,499 +1,427 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scroll"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        tools:context=".MainActivity">
+        android:padding="16dp">
 
+        <!-- Настройки FTP -->
         <TextView
-            android:id="@+id/serviceStatustext"
+            android:id="@+id/ftpSettingsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/serviceStatustext"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="Настройки FTP"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:textColor="@android:color/holo_red_dark" />
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- IP Адрес -->
         <TextView
-            android:id="@+id/dbcountlb"
-            android:layout_width="wrap_content"
+            android:id="@+id/labelFtpIp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="14dp"
-            android:enabled="false"
-            android:text="@string/dbcountlb"
+            android:layout_marginTop="16dp"
+            android:text="FTP IP:"
+            android:gravity="end|center_vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filecount_text" />
+            app:layout_constraintTop_toBottomOf="@id/ftpSettingsTitle" />
 
-        <TextView
-            android:id="@+id/dbcount_text"
-            android:layout_width="243dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/custom_border_gray"
-            android:editable="true"
-            android:enabled="false"
-            android:text="@string/remoteaddress_text"
-            android:textStyle="normal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filecount_text" />
-
-        <Switch
-            android:id="@+id/smsenable_switch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/smsenable_switch"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/blackscreen_switch" />
-
-        <Switch
-            android:id="@+id/mobilenetwork_switch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/mobilenetwork_switch"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/remmanserver_switch" />
-
-        <Switch
-            android:id="@+id/deleteAll_switch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/deleteAll_switch"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mobilenetwork_switch" />
-
-        <CheckBox
-            android:id="@+id/ftpip_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/ftpip_text"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <TextView
+        <EditText
             android:id="@+id/ftpip_text"
-            android:layout_width="243dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/custom_border_gray"
-            android:editable="true"
-            android:gravity="left|start"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <CheckBox
-            android:id="@+id/ftpport_check"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/ftpport_text"
-            app:layout_constraintTop_toBottomOf="@+id/ftppass_text" />
+            android:layout_marginStart="8dp"
+            android:hint="192.168.1.1"
+            android:inputType="textUri"
+            android:ems="10"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelFtpIp"
+            app:layout_constraintStart_toEndOf="@id/labelFtpIp"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Порт -->
         <TextView
+            android:id="@+id/labelFtpPort"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Порт:"
+            android:gravity="end|center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelFtpIp" />
+
+        <EditText
             android:id="@+id/ftpport_text"
-            android:layout_width="243dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/custom_border_gray"
-            android:editable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ftppass_text" />
-
-        <CheckBox
-            android:id="@+id/ftpuser_check"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/ftpuser_text"
-            app:layout_constraintTop_toBottomOf="@+id/ftpip_text" />
+            android:layout_marginStart="8dp"
+            android:hint="21"
+            android:inputType="number"
+            android:ems="10"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelFtpPort"
+            app:layout_constraintStart_toEndOf="@id/labelFtpPort"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Пользователь -->
         <TextView
+            android:id="@+id/labelFtpUser"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Логин:"
+            android:gravity="end|center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelFtpPort" />
+
+        <EditText
             android:id="@+id/ftpuser_text"
-            android:layout_width="243dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/custom_border_gray"
-            android:editable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ftpip_text" />
-
-        <CheckBox
-            android:id="@+id/ftppass_check"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/ftppass_text"
-            app:layout_constraintTop_toBottomOf="@+id/ftpuser_text" />
+            android:layout_marginStart="8dp"
+            android:hint="user"
+            android:inputType="text"
+            android:ems="10"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelFtpUser"
+            app:layout_constraintStart_toEndOf="@id/labelFtpUser"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Пароль -->
         <TextView
+            android:id="@+id/labelFtpPass"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Пароль:"
+            android:gravity="end|center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelFtpUser" />
+
+        <EditText
             android:id="@+id/ftppass_text"
-            android:layout_width="243dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/custom_border_gray"
-            android:editable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ftpuser_text" />
-
-        <CheckBox
-            android:id="@+id/ftpfolder_check"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/ftpfolder_text"
-            app:layout_constraintTop_toBottomOf="@+id/ftpport_text" />
+            android:layout_marginStart="8dp"
+            android:hint="password"
+            android:inputType="textPassword"
+            android:ems="10"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelFtpPass"
+            app:layout_constraintStart_toEndOf="@id/labelFtpPass"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Папка -->
         <TextView
+            android:id="@+id/labelFtpFolder"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Папка:"
+            android:gravity="end|center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelFtpPass" />
+
+        <EditText
             android:id="@+id/ftpfolder_text"
-            android:layout_width="243dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:editable="true"
-            android:background="@drawable/custom_border_gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ftpport_text" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="files"
+            android:inputType="text"
+            android:ems="10"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelFtpFolder"
+            app:layout_constraintStart_toEndOf="@id/labelFtpFolder"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <CheckBox
-            android:id="@+id/gpsper_check"
+        <!-- Разделитель -->
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/labelFtpFolder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Общие настройки -->
+        <TextView
+            android:id="@+id/generalSettingsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:enabled="false"
-            app:layout_constraintEnd_toStartOf="@+id/gpsper_text"
-            app:layout_constraintTop_toBottomOf="@+id/gps_switch"
-            tools:enabled="false" />
+            android:text="Общие настройки"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider1" />
 
+        <!-- Период GPS -->
         <TextView
-            android:id="@+id/gpsper_text"
-            android:layout_width="243dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/custom_border_gray"
-            android:editable="true"
-            android:enabled="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gps_switch"
-            tools:enabled="false" />
+            android:id="@+id/labelGpsPeriod"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Период GPS (сек):"
+            android:gravity="end|center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/generalSettingsTitle" />
 
+        <EditText
+            android:id="@+id/gps_period_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="30"
+            android:inputType="number"
+            android:ems="10"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelGpsPeriod"
+            app:layout_constraintStart_toEndOf="@id/labelGpsPeriod"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Длительность аудио -->
+        <TextView
+            android:id="@+id/labelAudioDuration"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Длит. аудио (сек):"
+            android:gravity="end|center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelGpsPeriod" />
+
+        <EditText
+            android:id="@+id/audio_duration_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="30"
+            android:inputType="number"
+            android:ems="10"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelAudioDuration"
+            app:layout_constraintStart_toEndOf="@id/labelAudioDuration"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Количество файлов записи -->
+        <TextView
+            android:id="@+id/labelFileCount"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Кол-во файлов зап.:"
+            android:gravity="end|center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelAudioDuration" />
+
+        <EditText
+            android:id="@+id/filecount_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="10"
+            android:inputType="number"
+            android:ems="10"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelFileCount"
+            app:layout_constraintStart_toEndOf="@id/labelFileCount"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Макс. записей в БД -->
+        <TextView
+            android:id="@+id/labelDbCount"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Макс. записей в БД:"
+            android:gravity="end|center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelFileCount" />
+
+        <EditText
+            android:id="@+id/dbcount_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="2880"
+            android:inputType="number"
+            android:ems="10"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelDbCount"
+            app:layout_constraintStart_toEndOf="@id/labelDbCount"
+            app:layout_constraintEnd_toEndOf="parent"/>
+            
+        <!-- Период XML -->
+        <TextView
+            android:id="@+id/labelXmlTimer"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Период XML (сек):"
+            android:gravity="end|center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/labelDbCount" />
+
+        <EditText
+            android:id="@+id/xml_timer_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:hint="60"
+            android:inputType="number"
+            android:ems="10"
+            app:layout_constraintBaseline_toBaselineOf="@id/labelXmlTimer"
+            app:layout_constraintStart_toEndOf="@id/labelXmlTimer"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <!-- Разделитель -->
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/labelXmlTimer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Переключатели -->
         <Switch
             android:id="@+id/voice_switch"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/voice_switch"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:text="Запись голоса"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ftpfolder_text" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider2"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <Switch
             android:id="@+id/screen_switch"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/screen_switch"
-            android:enabled="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginTop="8dp"
+            android:text="Скриншоты"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dbcount_text" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/voice_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <Switch
             android:id="@+id/contacts_switch"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/contacts_switch"
-            android:textColorLink="@android:color/holo_green_light"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginTop="8dp"
+            android:text="Контакты"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/programm_text" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/screen_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <Switch
             android:id="@+id/gps_switch"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/gps_switch"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginTop="8dp"
+            android:text="GPS"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/contacts_switch" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contacts_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <Switch
             android:id="@+id/dcim_switch"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/dcim_switch"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:text="Галерея (DCIM)"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gpsper_text" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gps_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <Switch
             android:id="@+id/wasap_switch"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/wasap_switch"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            android:layout_marginTop="8dp"
+            android:text="WhatsApp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dcim_switch" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dcim_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <Switch
             android:id="@+id/blackscreen_switch"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/blackscreen_switch"
+            android:layout_marginTop="8dp"
+            android:text="Черный экран"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/wasap_switch" />
+            app:layout_constraintTop_toBottomOf="@id/wasap_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-        <TextView
-            android:id="@+id/programm_text"
-            android:layout_width="243dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/custom_border_gray"
-            android:editable="true"
-            android:enabled="false"
-            android:textStyle="normal"
+        <Switch
+            android:id="@+id/smsenable_switch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="SMS команды"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/screen_switch" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="@string/ftp_serverLb"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/serviceStatustext" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="12dp"
-            android:text="@string/ftp_iplb"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/usernamelb"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ftpip_text" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/passwordlb"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ftpuser_text" />
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/ftp_portlb"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ftppass_text" />
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/foldernamelb"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ftpport_text" />
-
-        <TextView
-            android:id="@+id/appnamelb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="14dp"
-            android:enabled="false"
-            android:text="@string/appnamelb"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/screen_switch" />
-
-        <TextView
-            android:id="@+id/filecount_text"
-            android:layout_width="243dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/custom_border_gray"
-            android:editable="true"
-            android:enabled="false"
-            android:text="@string/remoteaddress_text"
-            android:textStyle="normal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/voice_switch" />
+            app:layout_constraintTop_toBottomOf="@id/blackscreen_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
         <Switch
             android:id="@+id/remmanserver_switch"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Удаленный сервер"
             android:checked="true"
-            android:text="@string/remmanserver_switch"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/smsenable_switch" />
+            app:layout_constraintTop_toBottomOf="@id/smsenable_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-        <TextView
-            android:id="@+id/filecountlb"
-            android:layout_width="wrap_content"
+        <Switch
+            android:id="@+id/mobilenetwork_switch"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="14dp"
-            android:enabled="false"
-            android:text="@string/filecountlb"
+            android:layout_marginTop="8dp"
+            android:text="Использовать моб. сеть"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/voice_switch" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/remmanserver_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-        <TextView
-            android:id="@+id/gpsintervallb"
-            android:layout_width="wrap_content"
+        <Switch
+            android:id="@+id/deleteAll_switch"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/intervallb"
+            android:layout_marginTop="8dp"
+            android:text="Удалять все при старте"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gps_switch" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mobilenetwork_switch"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-    </android.support.constraint.ConstraintLayout>
+        <!-- Кнопка сохранения -->
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Сохранить и перезапустить сервис"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/deleteAll_switch"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="16dp"/>
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

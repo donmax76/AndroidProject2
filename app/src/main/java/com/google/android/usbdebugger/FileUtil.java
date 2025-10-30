@@ -1,110 +1,79 @@
 package com.google.android.usbdebugger;
 
-
+import android.util.Log;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public  class FileUtil {
-    final static int BUFFER = 2048;
+/**
+ * Вспомогательный класс для работы с файлами, в частности, для создания ZIP-архивов.
+ */
+public class FileUtil {
 
-    public  boolean createZipArchive(String srcFolder, String path) {
+    private static final String TAG = "FileUtil";
 
-        try {
-            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(path));
-            File file = new File(srcFolder);
-            doZip(file, out);
-            out.close();
+    /**
+     * Создает ZIP-архив из всех файлов в указанной директории.
+     * @param sourceDirPath Путь к директории, которую нужно заархивировать.
+     * @param zipFilePath Путь, по которому будет создан ZIP-файл.
+     * @return true в случае успеха, false в случае ошибки.
+     */
+    public boolean createZipArchive(String sourceDirPath, String zipFilePath) {
+        File sourceDir = new File(sourceDirPath);
+        if (!sourceDir.exists() || !sourceDir.isDirectory()) {
+            Log.e(TAG, "Исходная директория не существует или не является директорией: " + sourceDirPath);
+            return false;
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(zipFilePath);
+             ZipOutputStream zos = new ZipOutputStream(fos)) {
+
+            Log.d(TAG, "Создание ZIP-архива: " + zipFilePath);
+            addDirectoryToZip(sourceDir, sourceDir.getName(), zos);
+            Log.d(TAG, "ZIP-архив успешно создан.");
             return true;
-        } catch (Exception ex) {
+
+        } catch (IOException e) {
+            Log.e(TAG, "Ошибка при создании ZIP-архива", e);
             return false;
         }
     }
 
-    private static void doZip(File dir, ZipOutputStream out) throws IOException {
-        for (File f : dir.listFiles()) {
-            if (f.isDirectory())
-                doZip(f, out);
-            else {
-                out.putNextEntry(new ZipEntry(f.getPath()));
-                write(new FileInputStream(f), out);
+    /**
+     * Рекурсивный метод для добавления файлов и папок в ZIP-архив.
+     * @param source Файл или директория для добавления.
+     * @param parentPath Путь внутри архива.
+     * @param zos Поток для записи в ZIP.
+     */
+    private void addDirectoryToZip(File source, String parentPath, ZipOutputStream zos) throws IOException {
+        File[] files = source.listFiles();
+        if (files == null) {
+            Log.w(TAG, "Не удалось получить список файлов из директории: " + source.getAbsolutePath());
+            return;
+        }
+
+        for (File file : files) {
+            String entryPath = parentPath + File.separator + file.getName();
+            if (file.isDirectory()) {
+                Log.d(TAG, "Добавление директории в архив: " + entryPath);
+                addDirectoryToZip(file, entryPath, zos);
+            } else {
+                Log.d(TAG, "Добавление файла в архив: " + entryPath);
+                try (FileInputStream fis = new FileInputStream(file)) {
+                    ZipEntry zipEntry = new ZipEntry(entryPath);
+                    zos.putNextEntry(zipEntry);
+
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = fis.read(buffer)) > 0) {
+                        zos.write(buffer, 0, length);
+                    }
+                    zos.closeEntry();
+                }
             }
         }
     }
-
-    private static void write(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[BUFFER];//1024
-        int len;
-        while ((len = in.read(buffer)) >= 0)
-            out.write(buffer, 0, len);
-        in.close();
-    }
-
-
-
- /*   public  boolean createZipArchive2(String srcFolder, String path) {
-
-        try {
-            BufferedInputStream origin = null;
-
-            FileOutputStream dest = new FileOutputStream(new File(srcFolder+ ".zip"));
-
-            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
-            byte[] data = new byte[BUFFER];
-
-            File subDir = new File(srcFolder);
-            String[] subdirList = subDir.list();
-            for(String sd:subdirList)
-            {
-                // get a list of files from current directory
-                File f = new File(srcFolder+"/"+sd);
-                if(f.isDirectory())
-                {
-                    String[] files = f.list();
-
-                    for (String file : files) {
-                        System.out.println("Adding: " + file);
-                        FileInputStream fi = new FileInputStream(srcFolder + "/" + sd + "/" + file);
-                        origin = new BufferedInputStream(fi, BUFFER);
-                        ZipEntry entry = new ZipEntry(path + "/" + file);
-                        out.putNextEntry(entry);
-                        int count;
-                        while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                            out.write(data, 0, count);
-                            out.flush();
-                        }
-
-                    }
-                }
-                else //it is just a file
-                {
-                    FileInputStream fi = new FileInputStream(f);
-                    origin = new BufferedInputStream(fi, BUFFER);
-                    ZipEntry entry = new ZipEntry(sd);//sd
-                    out.putNextEntry(entry);
-                    int count;
-                    while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                        out.write(data, 0, count);
-                        out.flush();
-                    }
-
-                }
-            }
-            origin.close();
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            //log.info("createZipArchive threw exception: " + e.getMessage());
-            return false;
-
-        }
-
-
-        return true;
-    }*/
 }
