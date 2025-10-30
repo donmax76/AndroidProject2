@@ -1,26 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace 'com.google.android.usbdebugger'
     compileSdk 34
-
+    namespace 'com.google.android.usbdebugger'
     defaultConfig {
-        applicationId "com.google.android.usbdebugger"
         minSdk 21
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        multiDexEnabled true // <-- ВАЖНО: Разрешаем использование MultiDex
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
+    buildTypes { release { minifyEnabled true } }
+}
 
     // Фикс дубликатов META-INF (LICENSE.md, NOTICE.md и другие)
     packagingOptions {
@@ -34,10 +22,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-}
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
+
+
     implementation 'com.google.android.material:material:1.11.0'
 
     // ИСПРАВЛЕНО: Правильная зависимость для ConstraintLayout

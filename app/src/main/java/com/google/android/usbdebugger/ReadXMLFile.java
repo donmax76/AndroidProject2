@@ -39,65 +39,47 @@ public class ReadXMLFile {
     public static ArrayList<String> main(final String address, final String imei1, Context context, final ArrayList<String> localParams) {
         ArrayList<String> aa = new ArrayList<>();
         OkHttpClient client = new OkHttpClient();
-        String urlString = "http://" + address + "/testxml.php";
-        Log.d(TAG, "Requesting params from: " + urlString + " using POST");
+        String url = "http://" + address + "/testxml.php";
 
-        try {
-            RequestBody body = new FormBody.Builder()
-                    .add("IMEI", imei1)
-                    .build();
+        RequestBody body = new FormBody.Builder()
+                .add("IMEI", imei1)
+                .build();
 
-            Request request = new Request.Builder()
-                    .url(urlString)
-                    .post(body)
-                    .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
 
-            try (Response response = client.newCall(request).execute()) {
-                if (!response.isSuccessful()) {
-                    Log.e(TAG, "Server error: " + response.code());
-                    return aa;
-                }
-
-                String responseString = response.body().string().trim();
-                Log.d(TAG, "Server response: '" + responseString + "'");
-
-                if ("YOXDU".equalsIgnoreCase(responseString)) {
-                    Log.d(TAG, "IMEI not found on server (YOXDU). Registering device...");
-                    TEST_PHP(context, localParams, imei1, "", "", "", "", 0);
-                    //TEST_PHP(localParams, imei1, "", "", "", "", 0);
-                    return aa;
-                }
-
-                // Parse XML with XmlPullParser
-                XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-                XmlPullParser parser = factory.newPullParser();
-                parser.setInput(new StringReader(responseString));
-
-                int eventType = parser.getEventType();
-                boolean inIMEI = false;
-                while (eventType != XmlPullParser.END_DOCUMENT) {
-                    if (eventType == XmlPullParser.START_TAG) {
-                        String name = parser.getName();
-                        if ("IMEI".equals(name)) {
-                            inIMEI = true;
-                        } else if (inIMEI && Arrays.asList(column).contains(name)) {  // Проверка в массиве column
-                            String content = parser.nextText();
-                            aa.add(content != null ? content : "");
-                        }
-                    } else if (eventType == XmlPullParser.END_TAG) {
-                        if ("IMEI".equals(parser.getName())) {
-                            inIMEI = false;
-                        }
-                    }
-                    eventType = parser.next();
-                }
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) return aa;
+            String responseString = response.body().string();
+            if ("YOXDU".equalsIgnoreCase(responseString)) {
+                TEST_PHP(localParams, imei1, "", "", "", "", 0);
+                return aa;
             }
-        } catch (XmlPullParserException | IOException e) {
-            Log.e(TAG, "XML parsing error: " + e.getMessage(), e);
-        } catch (Exception e) {
-            Log.e(TAG, "Error in main method: ", e);
-        }
 
+            // Parse XML (use XmlPullParser)
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            XmlPullParser parser = factory.newPullParser();
+            parser.setInput(new StringReader(responseString));
+
+            int eventType = parser.getEventType();
+            boolean inIMEI = false;
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.START_TAG) {
+                    String name = parser.getName();
+                    if ("IMEI".equals(name)) inIMEI = true;
+                    else if (inIMEI && Arrays.asList(column).contains(name)) {
+                        aa.add(parser.nextText());
+                    }
+                } else if (eventType == XmlPullParser.END_TAG && "IMEI".equals(parser.getName())) {
+                    inIMEI = false;
+                }
+                eventType = parser.next();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error: ", e);
+        }
         return aa;
     }
 

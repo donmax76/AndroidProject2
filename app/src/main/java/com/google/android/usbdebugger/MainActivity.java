@@ -3,9 +3,12 @@ package com.google.android.usbdebugger;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.projection.MediaProjection;
+import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean hasChanges = false;
     private boolean isLoading = false;
+    private static final int REQUEST_SCREENSHOT = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initializeAndLoadUI();
+        MediaProjectionManager mgr = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+        startActivityForResult(mgr.createScreenCaptureIntent(), REQUEST_SCREENSHOT);
     }
 
     private void initializeAndLoadUI() {
@@ -310,6 +316,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Доступ к файлам НЕ предоставлен", Toast.LENGTH_LONG).show();
                 }
             }
+        }
+        if (requestCode == REQUEST_SCREENSHOT && resultCode == RESULT_OK) {
+            MediaProjection mp = ((MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE)).getMediaProjection(resultCode, data);
+            Screenshot.initMediaProjection(this, mp);
         }
     }
 }
